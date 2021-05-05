@@ -23,5 +23,7 @@ namespace MineSweeperAPI.Models
 
         public bool IsRevealed { get; set; }
 
+        public pleaseeee
+
     }
 }
