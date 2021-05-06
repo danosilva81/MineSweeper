@@ -13,5 +13,7 @@ namespace MineSweeperAPI.Interfaces
         public List<MineSweeperGame> GetListOfGames();
 
         public MineSweeperGame GetGameById(string id);
+
+        public void UpdateGame(MineSweeperGame game);
     }
 }

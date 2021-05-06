@@ -37,5 +37,10 @@ namespace MineSweeperAPI.Repository
         {
             return _mineSweeperGames.Find(game => true).ToList();
         }
+
+        public void UpdateGame(MineSweeperGame game)
+        {
+            _mineSweeperGames.ReplaceOne(g => g.Id == game.Id, game);
+        }
     }
 }

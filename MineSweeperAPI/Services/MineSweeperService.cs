@@ -95,13 +95,28 @@ namespace MineSweeperAPI.Services
 
             if (game != null)
             {
-
+                RevealCell(game, position);
+                _mineRepository.UpdateGame(game);
             }
 
             return game;
         }
 
-        public void RevealCell(MineSweeperGame game, int position)
+        public MineSweeperGame MarkCellAsBomb(string gameId, int position)
+        {
+            var game = _mineRepository.GetGameById(gameId);
+
+            if (game != null) 
+            {
+                game.MineCellCollection[position].MarkedAsBomb = true;
+                _mineRepository.UpdateGame(game);
+            }
+
+            return game;
+        }
+
+
+        private void RevealCell(MineSweeperGame game, int position)
         {
             if (game.MineCellCollection[position].IsBomb)
                 GameOver(game);

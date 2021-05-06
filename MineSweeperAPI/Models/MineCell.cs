@@ -22,8 +22,5 @@ namespace MineSweeperAPI.Models
         public int NumberOfAdjacentBombs { get; set; }
 
         public bool IsRevealed { get; set; }
-
-        public pleaseeee
-
     }
 }
