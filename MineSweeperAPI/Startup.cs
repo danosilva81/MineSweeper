@@ -49,7 +49,8 @@ namespace MineSweeperAPI
             services.AddSingleton<IMineSweeperRepository, MongoMineSweeperRepo>();
             services.AddSingleton<MineSweeperService>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing()); ;
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MineSweeperAPI", Version = "v1" });

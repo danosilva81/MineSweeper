@@ -50,10 +50,10 @@ namespace MineSweeperAPI.Controllers
             return new MineSweeperGame() { Id = userId };
         }
 
-        [HttpGet("RevealCell/{id:length(24)}")]
-        public ActionResult<MineSweeperGame> RevealCell(string gameId, int position)
+        [HttpGet("RevealCell/{gameId:length(24)}")]
+        public ActionResult<MineSweeperGame> RevealCell(string gameId, MineCell mineCell)
         {
-            var game = _MineSweeperService.RevealCellPosition(gameId, position);
+            var game = _MineSweeperService.RevealCellPosition(gameId, mineCell.ArrayPostion);
 
             if (game == null)
             {
@@ -63,10 +63,23 @@ namespace MineSweeperAPI.Controllers
             return game;
         }
 
-        [HttpGet("MarkCellAsBomb/{id:length(24)}")]
-        public ActionResult<MineSweeperGame> MarkCellAsBomb(string gameId, int position)
+        [HttpPut("MarkCellAsBomb/{gameId:length(24)}")]
+        public ActionResult<MineSweeperGame> MarkCellAsBomb(string gameId, MineCell mineCell)
         {
-            var game = _MineSweeperService.MarkCellAsBomb(gameId, position);
+            var game = _MineSweeperService.MarkCellAsBomb(gameId, mineCell.ArrayPostion, mineCell.MarkedAsBomb);
+
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            return game;
+        }
+
+        [HttpPut("MarkCellAsQuestion/{gameId:length(24)}")]
+        public ActionResult<MineSweeperGame> MarkCellAsQuestion(string gameId, MineCell mineCell)
+        {
+            var game = _MineSweeperService.MarkCellAsQuestion(gameId, mineCell.ArrayPostion, mineCell.MarkedAsQuestion);
 
             if (game == null)
             {

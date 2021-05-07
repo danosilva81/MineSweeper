@@ -102,13 +102,26 @@ namespace MineSweeperAPI.Services
             return game;
         }
 
-        public MineSweeperGame MarkCellAsBomb(string gameId, int position)
+        public MineSweeperGame MarkCellAsBomb(string gameId, int position, bool markAsBomb)
         {
             var game = _mineRepository.GetGameById(gameId);
 
             if (game != null) 
             {
-                game.MineCellCollection[position].MarkedAsBomb = true;
+                game.MineCellCollection[position].MarkedAsBomb = markAsBomb;
+                _mineRepository.UpdateGame(game);
+            }
+
+            return game;
+        }
+
+        public MineSweeperGame MarkCellAsQuestion(string gameId, int position, bool markAsQuestion)
+        {
+            var game = _mineRepository.GetGameById(gameId);
+
+            if (game != null)
+            {
+                game.MineCellCollection[position].MarkedAsQuestion = markAsQuestion;
                 _mineRepository.UpdateGame(game);
             }
 
