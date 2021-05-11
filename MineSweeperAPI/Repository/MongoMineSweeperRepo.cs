@@ -31,16 +31,16 @@ namespace MineSweeperAPI.Repository
             return game;
         }
 
-        public MineSweeperGame GetGameById(string id) => _mineSweeperGames.Find<MineSweeperGame>(game => game.Id == id).FirstOrDefault();
+        public MineSweeperGame GetGameById(string id) =>
+            _mineSweeperGames.Find<MineSweeperGame>(game => game.Id == id).FirstOrDefault();
 
-        public List<MineSweeperGame> GetListOfGames()
-        {
-            return _mineSweeperGames.Find(game => true).ToList();
-        }
+        public List<MineSweeperGame> GetListOfGames() =>
+            _mineSweeperGames.Find(game => true).ToList();
 
-        public void UpdateGame(MineSweeperGame game)
-        {
+        public void UpdateGame(MineSweeperGame game) =>
             _mineSweeperGames.ReplaceOne(g => g.Id == game.Id, game);
-        }
+
+        public void DeleteGame(string id) =>
+            _mineSweeperGames.DeleteOne(g => g.Id == id);
     }
 }

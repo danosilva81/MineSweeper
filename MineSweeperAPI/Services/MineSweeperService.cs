@@ -128,6 +128,7 @@ namespace MineSweeperAPI.Services
             return game;
         }
 
+        public void DeleteGameById(string gameId) => _mineRepository.DeleteGame(gameId);
 
         private void RevealCell(MineSweeperGame game, int position)
         {

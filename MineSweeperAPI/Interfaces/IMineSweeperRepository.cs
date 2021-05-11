@@ -15,5 +15,7 @@ namespace MineSweeperAPI.Interfaces
         public MineSweeperGame GetGameById(string id);
 
         public void UpdateGame(MineSweeperGame game);
+
+        public void DeleteGame(string id);
     }
 }

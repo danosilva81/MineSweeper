@@ -19,10 +19,10 @@ namespace MineSweeperAPI.Controllers
             _MineSweeperService = MineSweeperService;
         }
 
-        [HttpPost]
-        public ActionResult<MineSweeperGame> Create(int xDim, int yDim)
+        [HttpPost("NewGame")]
+        public ActionResult<MineSweeperGame> Create(MineSweeperGame gameParam)
         {
-            var game = _MineSweeperService.CreateNewGame(xDim, yDim);
+            var game = _MineSweeperService.CreateNewGame(gameParam.XDimension, gameParam.YDimension, gameParam.NumberOfBombs);
             return CreatedAtRoute("GetGame", new { id = game.Id.ToString() }, game);
         }
 
@@ -50,7 +50,7 @@ namespace MineSweeperAPI.Controllers
             return new MineSweeperGame() { Id = userId };
         }
 
-        [HttpGet("RevealCell/{gameId:length(24)}")]
+        [HttpPut("RevealCell/{gameId:length(24)}")]
         public ActionResult<MineSweeperGame> RevealCell(string gameId, MineCell mineCell)
         {
             var game = _MineSweeperService.RevealCellPosition(gameId, mineCell.ArrayPostion);
@@ -87,6 +87,21 @@ namespace MineSweeperAPI.Controllers
             }
 
             return game;
+        }
+
+        [HttpDelete("DeleteGame/{id:length(24)}")]
+        public ActionResult<IActionResult> Delete(string id)
+        {
+            var game = _MineSweeperService.GetGameById(id);
+
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            _MineSweeperService.DeleteGameById(game.Id);
+
+            return NoContent();
         }
     }
 }
