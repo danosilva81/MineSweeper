@@ -90,7 +90,7 @@ namespace MineSweeperAPI.Controllers
         }
 
         [HttpDelete("DeleteGame/{id:length(24)}")]
-        public ActionResult<IActionResult> Delete(string id)
+        public ActionResult Delete(string id)
         {
             var game = _MineSweeperService.GetGameById(id);
 

@@ -1,4 +1,5 @@
-﻿using MineSweeperAPI.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using MineSweeperAPI.Interfaces;
 using MineSweeperAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -9,11 +10,13 @@ namespace MineSweeperAPI.Services
 {
     public class MineSweeperService
     {
+        private readonly ILogger _logger;
         private IMineSweeperRepository _mineRepository;
 
-        public MineSweeperService(IMineSweeperRepository mineRepository)
+        public MineSweeperService(IMineSweeperRepository mineRepository, ILogger<MineSweeperService> logger)
         {
             _mineRepository = mineRepository;
+            _logger = logger;
         }
 
         public MineSweeperGame CreateNewGame(int xDim, int yDim, int numberOfBombsParam = 0)
@@ -95,7 +98,14 @@ namespace MineSweeperAPI.Services
 
             if (game != null)
             {
-                RevealCell(game, position);
+                if (game.MineCellCollection[position].IsBomb)
+                {
+                    game.MineCellCollection[position].Exploded = true;
+                    GameOver(game);
+                }
+                else
+                    RevealCell(game, position);
+
                 _mineRepository.UpdateGame(game);
             }
 
@@ -106,7 +116,7 @@ namespace MineSweeperAPI.Services
         {
             var game = _mineRepository.GetGameById(gameId);
 
-            if (game != null) 
+            if (game != null)
             {
                 game.MineCellCollection[position].MarkedAsBomb = markAsBomb;
                 _mineRepository.UpdateGame(game);
@@ -132,45 +142,43 @@ namespace MineSweeperAPI.Services
 
         private void RevealCell(MineSweeperGame game, int position)
         {
-            if (game.MineCellCollection[position].IsBomb)
-                GameOver(game);
-            else
+            if (game.MineCellCollection[position].IsRevealed)
+                return;
+
+            game.MineCellCollection[position].IsRevealed = true;
+            if (game.MineCellCollection[position].NumberOfAdjacentBombs == 0)
             {
-                game.MineCellCollection[position].IsRevealed = true;
-                if (game.MineCellCollection[position].NumberOfAdjacentBombs == 0)
-                {
-                    int pos1 = (position - game.XDimension) - 1;
-                    if (IsPositionInBound(game, pos1))
-                        RevealCell(game, pos1);
+                int pos1 = (position - game.XDimension) - 1;
+                if (IsPositionInBound(game, pos1))
+                    RevealCell(game, pos1);
 
-                    int pos2 = (position - game.XDimension);
-                    if (IsPositionInBound(game, pos2))
-                        RevealCell(game, pos2);
+                int pos2 = (position - game.XDimension);
+                if (IsPositionInBound(game, pos2))
+                    RevealCell(game, pos2);
 
-                    int pos3 = (position - game.XDimension) + 1;
-                    if (IsPositionInBound(game, pos3))
-                        RevealCell(game, pos3);
+                int pos3 = (position - game.XDimension) + 1;
+                if (IsPositionInBound(game, pos3))
+                    RevealCell(game, pos3);
 
-                    int pos4 = position + 1;
-                    if (IsPositionInBound(game, pos4))
-                        RevealCell(game, pos4);
+                int pos4 = position - 1;
+                if (IsPositionInBound(game, pos4))
+                    RevealCell(game, pos4);
 
-                    int pos5 = position + 1;
-                    if (IsPositionInBound(game, pos5))
-                        RevealCell(game, pos5);
+                int pos5 = position + 1;
+                if (IsPositionInBound(game, pos5))
+                    RevealCell(game, pos5);
 
-                    int pos6 = (position + game.XDimension) - 1;
-                    if (IsPositionInBound(game, pos6))
-                        RevealCell(game, pos6);
+                int pos6 = (position + game.XDimension) - 1;
+                if (IsPositionInBound(game, pos6))
+                    RevealCell(game, pos6);
 
-                    int pos7 = (position + game.XDimension);
-                    if (IsPositionInBound(game, pos7))
-                        RevealCell(game, pos7);
+                int pos7 = (position + game.XDimension);
+                if (IsPositionInBound(game, pos7))
+                    RevealCell(game, pos7);
 
-                    int pos8 = (position + game.XDimension) + 1;
-                    if (IsPositionInBound(game, pos8))
-                        RevealCell(game, pos8);
-                }
+                int pos8 = (position + game.XDimension) + 1;
+                if (IsPositionInBound(game, pos8))
+                    RevealCell(game, pos8);
             }
         }
 
