@@ -28,6 +28,13 @@ namespace MineSweeperAPI.Services
 
         public MineSweeperGame CreateNewGame(int xDim, int yDim, List<int> listOfBombsPositions)
         {
+            MineSweeperGame newGame = CreateVariableGame(xDim, yDim, listOfBombsPositions);
+            _mineRepository.CreateMineSweeper(newGame);
+            return newGame;
+        }
+
+        public static MineSweeperGame CreateVariableGame(int xDim, int yDim, List<int> listOfBombsPositions) 
+        {
             var game = new MineSweeperGame()
             {
                 XDimension = xDim,
@@ -54,9 +61,23 @@ namespace MineSweeperAPI.Services
 
             game.GameIsOver = false;
 
-            _mineRepository.CreateMineSweeper(game);
-
             return game;
+        }
+
+        public MineSweeperGame ResetGame(string gameId) 
+        {
+            var game = _mineRepository.GetGameById(gameId);
+
+            if (game != null)
+            {
+                List<int> bombsPositions = GenerateRandomBombPositions(game.XDimension * game.YDimension, game.NumberOfBombs);
+                var resetGame = CreateVariableGame(game.XDimension, game.YDimension, bombsPositions);
+                resetGame.Id = game.Id;
+                _mineRepository.UpdateGame(resetGame);
+                return resetGame;
+            }
+            else
+                return null;
         }
 
         public List<int> GenerateRandomBombPositions(int cellsQty, int numberOfBombs)
@@ -76,7 +97,7 @@ namespace MineSweeperAPI.Services
             return listOfBombsPositions;
         }
 
-        private void SetAmmountOfAdjacentBombs(MineCell mineSpace, List<int> bombsPosition, int XDimension, int YDimension)
+        private static void SetAmmountOfAdjacentBombs(MineCell mineSpace, List<int> bombsPosition, int XDimension, int YDimension)
         {
             foreach (var bomb in bombsPosition)
             {
@@ -104,7 +125,10 @@ namespace MineSweeperAPI.Services
                     GameOver(game);
                 }
                 else
+                {
                     RevealCell(game, position);
+                    game.GameIsWon = GameIsWon(game);
+                }
 
                 _mineRepository.UpdateGame(game);
             }
@@ -149,35 +173,35 @@ namespace MineSweeperAPI.Services
             if (game.MineCellCollection[position].NumberOfAdjacentBombs == 0)
             {
                 int pos1 = (position - game.XDimension) - 1;
-                if (IsPositionInBound(game, pos1))
+                if (IsPositionInBound(game, pos1, position))
                     RevealCell(game, pos1);
 
                 int pos2 = (position - game.XDimension);
-                if (IsPositionInBound(game, pos2))
+                if (IsPositionInBound(game, pos2, position))
                     RevealCell(game, pos2);
 
                 int pos3 = (position - game.XDimension) + 1;
-                if (IsPositionInBound(game, pos3))
+                if (IsPositionInBound(game, pos3, position))
                     RevealCell(game, pos3);
 
                 int pos4 = position - 1;
-                if (IsPositionInBound(game, pos4))
+                if (IsPositionInBound(game, pos4, position))
                     RevealCell(game, pos4);
 
                 int pos5 = position + 1;
-                if (IsPositionInBound(game, pos5))
+                if (IsPositionInBound(game, pos5, position))
                     RevealCell(game, pos5);
 
                 int pos6 = (position + game.XDimension) - 1;
-                if (IsPositionInBound(game, pos6))
+                if (IsPositionInBound(game, pos6, position))
                     RevealCell(game, pos6);
 
                 int pos7 = (position + game.XDimension);
-                if (IsPositionInBound(game, pos7))
+                if (IsPositionInBound(game, pos7, position))
                     RevealCell(game, pos7);
 
                 int pos8 = (position + game.XDimension) + 1;
-                if (IsPositionInBound(game, pos8))
+                if (IsPositionInBound(game, pos8, position))
                     RevealCell(game, pos8);
             }
         }
@@ -190,9 +214,26 @@ namespace MineSweeperAPI.Services
             game.GameIsOver = true;
         }
 
-        private bool IsPositionInBound(MineSweeperGame game, int position)
+        private bool GameIsWon(MineSweeperGame game) 
         {
-            return position >= 0 && position < game.XDimension * game.YDimension;
+            var result = true;
+
+            foreach (var cellItem in game.MineCellCollection)
+            {
+                if (!cellItem.IsRevealed && !cellItem.IsBomb)
+                    return false;
+            }
+
+            return result;
+
+        }
+
+        private bool IsPositionInBound(MineSweeperGame game, int position, int originalPostion)
+        {
+            return
+                position >= 0 &&
+                position < (game.XDimension * game.YDimension) &&
+                Math.Abs(game.MineCellCollection[position].XPos - game.MineCellCollection[originalPostion].XPos) < 2;
         }
     }
 }

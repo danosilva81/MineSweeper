@@ -30,6 +30,18 @@ namespace MineSweeperAPI.Controllers
         public ActionResult<List<MineSweeperGame>> Get() =>
             _MineSweeperService.GetListOfGames();
 
+        [HttpGet("ResetGame/{id:length(24)}", Name = "ResetGame")]
+        public ActionResult<MineSweeperGame> ResetGame(string id)
+        {
+            var game = _MineSweeperService.ResetGame(id);
+
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            return game;
+        }
 
         [HttpGet("GetGame/{id:length(24)}", Name = "GetGame")]
         public ActionResult<MineSweeperGame> Get(string id)

@@ -18,5 +18,7 @@ namespace MineSweeperAPI.Models
         public int NumberOfBombs { get; set; }
 
         public bool GameIsOver { get; set; }
+
+        public bool GameIsWon { get; set; }
     }
 }
