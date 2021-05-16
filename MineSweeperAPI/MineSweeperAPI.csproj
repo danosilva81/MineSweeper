@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>62ba119a-0009-47cb-9f9b-6b799c8161c7</UserSecretsId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\PROJECTS\MIOS\MineSweeperAPI\MineSweeperAPI\MineSweeperAPI.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

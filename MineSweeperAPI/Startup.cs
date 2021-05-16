@@ -9,6 +9,7 @@ using MineSweeperAPI.Repository;
 using MineSweeperAPI.Services;
 using MongoDB.Driver;
 using System.IO;
+using System.Security.Authentication;
 
 namespace MineSweeperAPI
 {
@@ -20,6 +21,7 @@ namespace MineSweeperAPI
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.Production.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
 
@@ -34,6 +36,7 @@ namespace MineSweeperAPI
             var dataBaseConfig = Configuration.GetSection("MineDatabaseSettings");
 
             MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(dataBaseConfig["ConnectionString"]));
+            settings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
             services.AddSingleton((s) => new MongoClient(settings));
 
             services.AddSingleton<IConfiguration>(Configuration);
@@ -54,10 +57,11 @@ namespace MineSweeperAPI
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MineSweeperAPI v1"));
+                app.UseDeveloperExceptionPage();                
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MineSweeperAPI v1"));
 
             app.UseHttpsRedirection();
 
