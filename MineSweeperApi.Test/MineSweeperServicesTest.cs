@@ -21,7 +21,6 @@ namespace MineSweeperApi.Test
             var game = MineSweeperService.CreateVariableGame(3, 3, new List<int>() { 0 });
 
             MineSweeperRepoMocked.Setup(x => x.GetGameById(It.IsAny<string>())).Returns(game);
-            //MineSweeperRepoMocked.Setup(x => x.UpdateGame(It.IsAny<MineSweeperGame>()));
 
             _mineSweeperService = new MineSweeperService(MineSweeperRepoMocked.Object, LoggerMocked.Object);
         }

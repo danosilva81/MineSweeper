@@ -17,15 +17,7 @@ namespace MineSweeperAPI
     {
         public Startup(IConfiguration configuration)
         {
-            //Configuration = configuration;
-            var config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("appsettings.Production.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .Build();
-
-            Configuration = config;
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
