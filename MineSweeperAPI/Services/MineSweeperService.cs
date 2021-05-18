@@ -89,7 +89,7 @@ namespace MineSweeperAPI.Services
             var randomGen = new Random();
             while (listOfBombsPositions.Count < numberOfBombs)
             {
-                var newRandomNumber = randomGen.Next(0, cellsQty - 1);
+                var newRandomNumber = randomGen.Next(0, cellsQty);
                 if (!listOfBombsPositions.Contains(newRandomNumber))
                     listOfBombsPositions.Add(newRandomNumber);
             }

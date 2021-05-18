@@ -54,6 +54,15 @@ namespace MineSweeperApi.Test
             Assert.False(game.MineCellCollection[10].IsRevealed);
             Assert.True(game.MineCellCollection[11].IsRevealed);
 
+        }
+
+        [Fact]
+        public void CreateGame_AdjacentsBombs_ShouldBeCorrect()
+        {
+            SetupMockedServiceGame(3, 4, new List<int>() { 1, 7 });
+
+            var game = _mineSweeperService.GetGameById("abc1");
+
             Assert.Equal(1, game.MineCellCollection[0].NumberOfAdjacentBombs);
             Assert.Equal(1, game.MineCellCollection[2].NumberOfAdjacentBombs);
 
@@ -64,7 +73,30 @@ namespace MineSweeperApi.Test
             Assert.Equal(1, game.MineCellCollection[9].NumberOfAdjacentBombs);
             Assert.Equal(1, game.MineCellCollection[10].NumberOfAdjacentBombs);
             Assert.Equal(1, game.MineCellCollection[11].NumberOfAdjacentBombs);
-
         }
+
+
+        [Fact]
+        public void RevealAllCells_ExceptBombPosition_ShoulWonGame()
+        {
+            var game = MineSweeperService.CreateVariableGame(3, 3, new List<int>() { 1, 5, 6 });
+            MineSweeperRepoMocked.Setup(x => x.GetGameById(It.IsAny<string>())).Returns(game);
+            _mineSweeperService = new MineSweeperService(MineSweeperRepoMocked.Object, LoggerMocked.Object);
+
+            game = _mineSweeperService.RevealCellPosition("abc1", 0);
+            game = _mineSweeperService.RevealCellPosition("abc1", 2);
+            game = _mineSweeperService.RevealCellPosition("abc1", 3);
+            game = _mineSweeperService.RevealCellPosition("abc1", 4);
+
+            Assert.False(game.GameIsOver);
+            Assert.False(game.GameIsWon);
+
+            game = _mineSweeperService.RevealCellPosition("abc1", 7);
+            game = _mineSweeperService.RevealCellPosition("abc1", 8);
+
+            Assert.True(game.GameIsWon);
+        }
+
+
     }
 }
