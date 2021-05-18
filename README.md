@@ -2,7 +2,7 @@
 
 This is a Restfull API to play Minesweeper. 
 
-This is a test exercise by Software Engineer Daniel Silva Jiménez
+This is a test exercise by [Software Engineer Daniel Silva Jiménez](https://www.linkedin.com/in/daniel-silva-jim%C3%A9nez-12871653)
 
 ## Main Functions
 
