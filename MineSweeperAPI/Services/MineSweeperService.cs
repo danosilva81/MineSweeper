@@ -102,7 +102,7 @@ namespace MineSweeperAPI.Services
             foreach (var bomb in bombsPosition)
             {
                 var xBombPos = bomb % XDimension;
-                var yBombPos = bomb / YDimension;
+                var yBombPos = bomb / XDimension;
                 if ((xBombPos == mineSpace.XPos || xBombPos == mineSpace.XPos - 1 || xBombPos == mineSpace.XPos + 1) &&
                     (yBombPos == mineSpace.YPos || yBombPos == mineSpace.YPos - 1 || yBombPos == mineSpace.YPos + 1))
                     mineSpace.NumberOfAdjacentBombs++;
