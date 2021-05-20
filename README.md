@@ -1,6 +1,6 @@
 # Minesweeper API	
 
-This is a Restfull API to play Minesweeper. 
+This is a Restful API to play Minesweeper developed with .NET Core, using as data storage a document database in MongoDb.
 
 This is a test exercise by [Software Engineer Daniel Silva Jiménez](https://www.linkedin.com/in/daniel-silva-jim%C3%A9nez-12871653)
 
